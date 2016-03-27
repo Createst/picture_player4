@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+	 <script type="text/javascript" src="js/jquery-2.1.1.js"></script>
+	 
+  <style type="text/css">	
+  *{margin:0;padding:0;}
+	li{list-style:none;}
+
+.con{width:1300px;height:520px;margin: 0 auto;position:relative;}
+.con .content{width:1300px;height:520px;overflow:hidden;}
+.con .content ul{height:100%;display:-webkit-box;}
+
+nav{width:180px;height:40px;position:absolute;left:0px;right:0px;margin:0 auto;bottom:10px;z-index:20;}
+nav ul li{display:inline-block;width:10px;height:10px;border:2px #00ff00 solid;color:black;text-decoration:none;text-align:center;border-radius:6px;background:white;cursor:pointer;}
+.nshow{background:#00ff00;border:2px white solid;-webkit-transform:scale(1.4);}
+.left,.right{width:60px;height:100%;background:rgba(255,255,255,.0);position:absolute;z-index:20;top:0px;text-align:center;font-size:32px;color:rgba(255,255,255,.0);cursor:pointer;transition:all 1s ease;}
+.left{left:0px;}
+.right{right:0px;}
+.left span{display:inline-block;margin-top:140px;}
+.right span{display:inline-block;margin-top:140px;}
+
+  </style>
+ </head>
+ <body>
+  <div class="con" >
+		<div class="content">
+			<ul>
+			<li><a href="#"><img src="images/1.jpg"  width="1300px" height="520px"/></a></li>
+			<li><a href="#"><img src="images/2.jpg"  width="1300px" height="520px"/></a></li>
+			<li ><a href="#"><img src="images/3.jpg"  width="1300px" height="520px"/></a></li>
+			<li><a href="#"><img src="images/4.jpg"  width="1300px" height="520px"/></a></li>
+			<li><a href="#"><img src="images/5.jpg"  width="1300px" height="520px"/></a></li>
+			<li><a href="#"><img src="images/6.jpg"  width="1300px" height="520px"/></a></li>
+			</ul>			
+		</div>	
+	<nav>
+			<ul>
+			<li class="nshow"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			</ul>	
+	</nav>
+
+<div class="left"><span>&lt;</span></div>
+<div class="right"><span>&gt;</span></div>
+  </div>
+
+  <script>
+
+		var index=0;
+		var select_index=0;
+		/*************************************************************************************************/
+		//下一张
+		function next(){
+			//第一张图片加动画，使其左外边距为-700
+			$(".con .content li:first-child").animate({"margin-left":"-1300px"},1000,function(){		
+			var cloneImg=$(this).clone();//当第一张图片移出，克隆其副本，之后删除
+			$(this).remove();
+			cloneImg.css({"margin-left":"0px"});
+			$(".con .content ul").append(cloneImg);//把副本添加到ul的后面
+				index++;
+				if(index==6){//判断索引是否等于4，为4表示到最后一个
+				index=0;
+				}
+				$("nav ul li:eq("+index+")").addClass("nshow").siblings().removeClass("nshow");//改变样式
+		
+		})
+		
+		}
+		/*************************************************************************************************/
+		function prev(){
+			var lastclone=$(".con .content li:last-child").clone();
+			$(".con .content li:last-child").remove();
+			lastclone.css({"margin-left":"-1300px"});
+			$(".con .content ul").prepend(lastclone);//把副本添加到ul的后面
+			$(".con .content li:first-child").animate({"margin-left":"0px"},800,function(){
+					index--;
+				if(index==-1){//判断索引是否等于4，为4表示到最后一个
+				index=5;
+				}
+				$("nav ul li:eq("+index+")").addClass("nshow").siblings().removeClass("nshow");//改变样式
+				
+			})
+		
+		}
+		/*************************************************************************************************/
+		//选择浏览图片
+		$("nav ul li").on("click",function(){
+				var select_index=$(this).index();
+				if(select_index>index)
+				{//当选择的索引大于当前的索引，则执行num次next()
+							var num=select_index-index;
+							for(var i=0;i<num;++i)
+							{						
+									//第一张图片加动画，使其左外边距为-700
+									$(".con .content li:first-child").css({"margin-left":"-1300px"});		
+									var cloneImg2=$(".con .content li:first-child").clone();//当第一张图片移出，克隆其副本，之后删除
+									$(".con .content li:first-child").remove();
+									cloneImg2.css({"margin-left":"0px"});
+									$(".con .content ul").append(cloneImg2);//把副本添加到ul的后面		
+									
+									
+							}
+				
+				}else if(select_index<index)
+				{
+						var num=index-select_index;
+						for(var i=0;i<num;++i)
+						{						
+							var lastclone2=$(".con .content li:last-child").clone();
+							$(".con .content li:last-child").remove();
+							lastclone2.css({"margin-left":"-1300px"});
+							$(".con .content ul").prepend(lastclone2);//把副本添加到ul的后面
+							$(".con .content li:first-child").css({"margin-left":"0px"});
+							
+							
+						}				
+				}
+				$("nav ul li:eq("+select_index+")").addClass("nshow").siblings().removeClass("nshow");//改变样式
+				index=select_index
+		
+		})
+
+		var inter=window.setInterval("next()",4000);//页面加载完，自动轮播
+		/*************************************************************************************************/
+		//鼠标悬浮控制	
+		$(".con").hover(function(){
+
+			window.clearInterval(inter);//鼠标移动到图片上停止运动
+			$(".left,.right").css({"color":"rgba(255,255,255,.7)","background":"rgba(255,255,255,.1)"})//显示控件
+				
+		},function(){
+			
+			inter=window.setInterval("next()",4000);//鼠标离开图片开始滚动
+			$(".left,.right").css({"color":"rgba(255,255,255,.0)","background":"rgba(255,255,255,.0)"})//控件消失
+		})
+	/*************************************************************************************************/
+	$(".right").on("click",next);
+	$(".left").on("click",prev);
+	
+  </script>
+ </body>
+</html>
